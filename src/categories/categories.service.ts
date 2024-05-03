@@ -23,6 +23,9 @@ export class CategoriesService {
       }
     }
     try {
+      if (category.name) {
+        category.name = category.name.toLowerCase();
+      }
       return await this.categoriesModel.create(category);
     } catch (err) {
       if (err.code === 11000)
