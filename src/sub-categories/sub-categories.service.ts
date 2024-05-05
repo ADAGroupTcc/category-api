@@ -7,7 +7,7 @@ import { SubCategories } from '../schemas/subcategory.schema';
 export class SubCategoriesService {
   constructor(@InjectModel(SubCategories.name) private readonly subCategoriesModel: Model<SubCategories>) { }
 
-  async findAll(): Promise<SubCategories[]> {
-    return this.subCategoriesModel.find().exec();
+  async findAllWithoutFilters(): Promise<SubCategories[]> {
+    return await this.subCategoriesModel.find().exec();
   }
 }

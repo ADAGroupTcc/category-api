@@ -12,9 +12,10 @@ export class CategoriesService {
     private readonly subCategoriesService: SubCategoriesService,
     @InjectModel(Categories.name) private readonly categoriesModel: Model<CategoryDto>,
   ) { }
+
   async createCategory(category: CategoryDto) {
     if (category.subCategories.length) {
-      const subCategories: SubCategories[] = await this.subCategoriesService.findAll();
+      const subCategories: SubCategories[] = await this.subCategoriesService.findAllWithoutFilters();
       const subCategoriesIds: string[] = subCategories.map(subCategory => subCategory._id);
       const invalidSubCategories: string[] = category.subCategories.filter(subCategory => !subCategoriesIds.includes(subCategory));
       if (invalidSubCategories.length) {
@@ -22,7 +23,6 @@ export class CategoriesService {
       }
     }
 
-    // Check if the category name is similar to existing categories
     const existingCategories: CategoryDto[] = await this.categoriesModel.find({ name: { $regex: `^${category.name}$`, $options: 'i' } });
     if (existingCategories.length) {
       throw new BadRequestException('Category name is too similar to existing categories');
@@ -39,5 +39,18 @@ export class CategoriesService {
       else
         throw new InternalServerErrorException(err.message)
     }
+  }
+
+  async getCategories(name: string, limit: number, next: number) {
+    let categories: CategoryDto[];
+    if (name) {
+      categories = await this.categoriesModel.find({ name: { $regex: `^${name}$`, $options: 'i' } }).exec();
+    }
+
+    if (categories) {
+      return categories
+    }
+
+    return await this.categoriesModel.find().limit(limit).skip((next - 1) * limit).exec();
   }
 }
