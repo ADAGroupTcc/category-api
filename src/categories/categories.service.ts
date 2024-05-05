@@ -40,4 +40,17 @@ export class CategoriesService {
         throw new InternalServerErrorException(err.message)
     }
   }
+
+  async getCategories(name: string, limit: number, next: number) {
+    let categories: CategoryDto[];
+    if (name) {
+      categories = await this.categoriesModel.find({ name: { $regex: `^${name}$`, $options: 'i' } }).exec();
+    }
+
+    if (categories) {
+      return categories
+    }
+
+    return await this.categoriesModel.find().limit(limit).skip((next - 1) * limit).exec();
+  }
 }
