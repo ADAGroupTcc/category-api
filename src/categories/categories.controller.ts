@@ -18,7 +18,7 @@ export class CategoriesController {
     const categories = await this.categoriesService.getCategories(name, limit, next);
     return {
       categories,
-      next: next + 1
+      next: Number(next) + 1
     }
   }
 }
