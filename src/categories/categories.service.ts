@@ -49,7 +49,7 @@ export class CategoriesService {
 
     return await this.categoriesModel.find().limit(limit).skip((next - 1) * limit).exec();
   }
-  
+
   async deleteCategory(id: string) {
     try {
       await this.categoriesModel.findByIdAndDelete(id).exec();
@@ -73,7 +73,17 @@ export class CategoriesService {
     if (category.name) {
       category.name = category.name.toLowerCase();
     }
-    const categoryUpdated: Categories = await this.categoriesModel.findOneAndUpdate({ _id: id }, category, { new: true })
+
+    var categoryUpdated: Categories
+
+    try {
+      categoryUpdated = await this.categoriesModel.findOneAndUpdate({ _id: id }, category, { new: true })
+    } catch (err) {
+      if (err.name === 'CastError') {
+        throw new BadRequestException('Invalid id')
+      }
+      throw new InternalServerErrorException(err.message)
+    }
     if (!categoryUpdated)
       throw new NotFoundException('Category not found')
     categoryUpdated.updatedAt = new Date()
