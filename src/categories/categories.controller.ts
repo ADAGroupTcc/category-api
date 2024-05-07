@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
+import { BadRequestException, Delete, Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CategoryDto } from './dto';
+import { CategoryDto, CategoryPatchDto } from './dto';
 
 @Controller('v1/categories')
 export class CategoriesController {
@@ -26,5 +26,14 @@ export class CategoriesController {
   @HttpCode(204)
   async deleteCategory(@Param("id") id: string) {
     return this.categoriesService.deleteCategory(id);
+  }
+
+  @Patch('/:id')
+  async updateCategory(@Body() body: CategoryPatchDto, @Param("id") id: string) {
+    if (body.name || body.subCategories || body.description || body.classification) {
+      return this.categoriesService.updateCategory(id, body);
+    } else {
+      throw new BadRequestException('At least one field must be filled in to update the category');
+    }
   }
 }
