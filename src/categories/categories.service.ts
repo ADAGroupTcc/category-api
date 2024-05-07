@@ -53,4 +53,12 @@ export class CategoriesService {
 
     return await this.categoriesModel.find().limit(limit).skip((next - 1) * limit).exec();
   }
+
+  async deleteCategory(id: string) {
+    try {
+      await this.categoriesModel.findByIdAndDelete(id).exec();
+    } catch (err) {
+      // Adicionar log de erro
+    }
+  }
 }

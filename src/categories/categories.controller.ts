@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CategoryDto } from './dto';
 
@@ -20,5 +20,11 @@ export class CategoriesController {
       categories,
       next: Number(next) + 1
     }
+  }
+
+  @Delete("/:id")
+  @HttpCode(204)
+  async deleteCategory(@Param("id") id: string) {
+    return this.categoriesService.deleteCategory(id);
   }
 }
