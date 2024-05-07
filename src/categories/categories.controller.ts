@@ -1,4 +1,4 @@
-import { BadRequestException, Delete, Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CategoryDto, CategoryPatchDto } from './dto';
 
