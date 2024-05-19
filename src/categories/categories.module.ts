@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Categories, CategoriesSchema } from 'src/schemas';
 import { SubCategoriesModule } from 'src/sub-categories/sub-categories.module';
 import { CategoriesController } from './categories.controller';

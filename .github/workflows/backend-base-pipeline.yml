@@ -1,8 +1,6 @@
-name: CD
+# Depreciated
 
-on:
-  pull_request:
-    branches: ["main"]
+name: CD
 
 jobs:
   build-and-test:
@@ -24,4 +22,3 @@ jobs:
 
       - name: Render Deployment
         run: curl ${{ secrets.RENDER_DEPLOYMENT_HOM_URL }}
-        
