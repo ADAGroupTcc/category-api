@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-import { BadRequestException, Body, Controller, Get, Header, Headers, Post, Query } from '@nestjs/common';
-import { SubCategoryDto } from './dto';
-=======
 import { BadRequestException, Body, Controller, Delete, Get, Header, Headers, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { SubCategoryDto, SubCategoryPatchDto } from './dto';
->>>>>>> Stashed changes
 import { SubCategoriesService } from './sub-categories.service';
 
 @Controller('v1/sub-categories')
@@ -31,9 +26,6 @@ export class SubCategoriesController {
       next: Number(next) + 1
     }
   }
-<<<<<<< Updated upstream
-=======
-
   @Patch(':id')
   async updateSubCategory(@Param('id') id: string, @Body() body: SubCategoryPatchDto) {
     return await this.subCategoriesService.updateSubCategory(id, body);
@@ -44,5 +36,4 @@ export class SubCategoriesController {
   async deleteSubCategory(@Param('id') id: string) {
     return await this.subCategoriesService.deleteSubCategory(id);
   }
->>>>>>> Stashed changes
 }

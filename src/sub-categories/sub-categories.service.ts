@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SubCategories } from '../schemas/subcategory.schema';
-import { SubCategoryDto } from './dto';
+import { SubCategoryDto, SubCategoryPatchDto } from './dto';
 
 @Injectable()
 export class SubCategoriesService {
@@ -36,8 +36,12 @@ export class SubCategoriesService {
     }
   }
 
-<<<<<<< Updated upstream
-=======
+  async deleteSubCategory(id: string) {
+    try {
+      await this.subCategoriesModel.findByIdAndDelete(id).exec();
+    } catch (err) {
+    }
+  }
 
   async updateSubCategory(id: string, subCategory: SubCategoryPatchDto) {
     const existingCategories: SubCategoryPatchDto[] = await this.subCategoriesModel.find({ name: { $regex: `^${subCategory.name}$`, $options: 'i' } });
@@ -65,14 +69,6 @@ export class SubCategoriesService {
     return subCategoryUpdated
   }
 
-  async deleteSubCategory(id: string) {
-    try {
-      await this.subCategoriesModel.findByIdAndDelete(id).exec();
-    } catch (err) {
-    }
-  }
-
->>>>>>> Stashed changes
   async findAllWithoutFilters(): Promise<SubCategories[]> {
     return await this.subCategoriesModel.find().exec();
   }
