@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Header, Headers, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Header, Headers, Post, Query } from '@nestjs/common';
 import { SubCategoryDto } from './dto';
 import { SubCategoriesService } from './sub-categories.service';
 
@@ -14,5 +14,16 @@ export class SubCategoriesController {
     }
     body.creatorId = userId;
     return await this.subCategoriesService.create(body);
+  }
+
+  @Get()
+  async findAllSubCategories(@Query('creator_id') creatorId: string, @Query('name') name: string, @Query('next') next: number, @Query('limit') limit: number) {
+    if (!limit) limit = 10;
+    if (!next) next = 1;
+    const subCategories = await this.subCategoriesService.findAll(creatorId, name, next, limit);
+    return {
+      subCategories,
+      next: Number(next) + 1
+    }
   }
 }
