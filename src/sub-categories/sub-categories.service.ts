@@ -36,6 +36,43 @@ export class SubCategoriesService {
     }
   }
 
+<<<<<<< Updated upstream
+=======
+
+  async updateSubCategory(id: string, subCategory: SubCategoryPatchDto) {
+    const existingCategories: SubCategoryPatchDto[] = await this.subCategoriesModel.find({ name: { $regex: `^${subCategory.name}$`, $options: 'i' } });
+    if (existingCategories.length) {
+      throw new BadRequestException('Sub categories name is too similar to existing categories');
+    }
+
+    if (subCategory.name) {
+      subCategory.name = subCategory.name.toLowerCase();
+    }
+
+    var subCategoryUpdated: SubCategories
+
+    try {
+      subCategoryUpdated = await this.subCategoriesModel.findOneAndUpdate({ _id: id }, subCategory, { new: true })
+    } catch (err) {
+      if (err.name === 'CastError') {
+        throw new BadRequestException('Invalid id')
+      }
+      throw new InternalServerErrorException(err.message)
+    }
+    if (!subCategoryUpdated)
+      throw new NotFoundException('Category not found')
+    subCategoryUpdated.updatedAt = new Date()
+    return subCategoryUpdated
+  }
+
+  async deleteSubCategory(id: string) {
+    try {
+      await this.subCategoriesModel.findByIdAndDelete(id).exec();
+    } catch (err) {
+    }
+  }
+
+>>>>>>> Stashed changes
   async findAllWithoutFilters(): Promise<SubCategories[]> {
     return await this.subCategoriesModel.find().exec();
   }
