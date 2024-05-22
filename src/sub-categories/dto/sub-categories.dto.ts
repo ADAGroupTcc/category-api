@@ -1,4 +1,4 @@
-import { ArrayMinSize, IsArray, IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
+import { ArrayMinSize, IsArray, IsBoolean, IsEmail, IsEmpty, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
 
 export class SubCategoryDto {
   @IsString()
@@ -13,9 +13,8 @@ export class SubCategoryDto {
   @IsOptional()
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  creator_id: string;
+  @IsEmpty()
+  creatorId: string;
 
   @IsNumber()
   @IsOptional()

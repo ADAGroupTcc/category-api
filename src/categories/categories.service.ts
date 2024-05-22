@@ -92,7 +92,7 @@ export class CategoriesService {
 
   async verifySubCategories(category: CategoryDto): Promise<boolean> {
     const subCategories: SubCategories[] = await this.subCategoriesService.findAllWithoutFilters();
-    const subCategoriesIds: string[] = subCategories.map(subCategory => subCategory._id);
+    const subCategoriesIds: string[] = subCategories.map(subCategory => subCategory._id.toString());
     const invalidSubCategories: string[] = category.subCategories.filter(subCategory => !subCategoriesIds.includes(subCategory));
     return invalidSubCategories && invalidSubCategories.length ? false : true;
   }
