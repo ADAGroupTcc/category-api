@@ -36,6 +36,12 @@ export class SubCategoriesService {
     }
   }
 
+  async deleteSubCategory(id: string) {
+    try {
+      await this.subCategoriesModel.findByIdAndDelete(id).exec();
+    } catch (err) {
+    }
+  }
 
   async updateSubCategory(id: string, subCategory: SubCategoryPatchDto) {
     const existingCategories: SubCategoryPatchDto[] = await this.subCategoriesModel.find({ name: { $regex: `^${subCategory.name}$`, $options: 'i' } });

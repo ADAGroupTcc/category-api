@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Header, Headers, Param, Patch, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Header, Headers, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { SubCategoryDto, SubCategoryPatchDto } from './dto';
 import { SubCategoriesService } from './sub-categories.service';
 
@@ -26,9 +26,14 @@ export class SubCategoriesController {
       next: Number(next) + 1
     }
   }
-
   @Patch(':id')
   async updateSubCategory(@Param('id') id: string, @Body() body: SubCategoryPatchDto) {
     return await this.subCategoriesService.updateSubCategory(id, body);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteSubCategory(@Param('id') id: string) {
+    return await this.subCategoriesService.deleteSubCategory(id);
   }
 }
