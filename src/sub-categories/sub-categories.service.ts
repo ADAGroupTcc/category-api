@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SubCategories } from '../schemas/subcategory.schema';
-import { SubCategoryDto } from './dto';
+import { SubCategoryDto, SubCategoryPatchDto } from './dto';
 
 @Injectable()
 export class SubCategoriesService {
@@ -34,6 +34,33 @@ export class SubCategoriesService {
     } catch (err) {
       throw new BadRequestException(err.message);
     }
+  }
+
+
+  async updateSubCategory(id: string, subCategory: SubCategoryPatchDto) {
+    const existingCategories: SubCategoryPatchDto[] = await this.subCategoriesModel.find({ name: { $regex: `^${subCategory.name}$`, $options: 'i' } });
+    if (existingCategories.length) {
+      throw new BadRequestException('Sub categories name is too similar to existing categories');
+    }
+
+    if (subCategory.name) {
+      subCategory.name = subCategory.name.toLowerCase();
+    }
+
+    var subCategoryUpdated: SubCategories
+
+    try {
+      subCategoryUpdated = await this.subCategoriesModel.findOneAndUpdate({ _id: id }, subCategory, { new: true })
+    } catch (err) {
+      if (err.name === 'CastError') {
+        throw new BadRequestException('Invalid id')
+      }
+      throw new InternalServerErrorException(err.message)
+    }
+    if (!subCategoryUpdated)
+      throw new NotFoundException('Category not found')
+    subCategoryUpdated.updatedAt = new Date()
+    return subCategoryUpdated
   }
 
   async findAllWithoutFilters(): Promise<SubCategories[]> {
